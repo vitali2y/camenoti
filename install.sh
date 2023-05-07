@@ -5,7 +5,7 @@
 
 apt-get update
 mkdir /var/log/motion
+chown motion:motion /var/log/motion
 apt-get -y install motion curl
 cp -rf ./etc/* /etc
 hostnamectl hostname camenoti
-reboot
