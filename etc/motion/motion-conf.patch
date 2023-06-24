@@ -1,75 +1,108 @@
---- motion-new.conf	2023-05-07 23:21:52.916921386 +0300
-+++ motion.conf	2023-05-07 22:07:56.661822546 +0300
-@@ -13,7 +13,7 @@
- ############################################################
+--- motion.conf	2023-05-07 22:07:56.661822546 +0300
++++ motion-2306250025.conf	2023-06-25 00:29:57.170405450 +0300
+@@ -35,6 +35,7 @@
  
- # Start in daemon (background) mode and release terminal.
--daemon on
-+daemon off
+ # Parameters to control video device.  See motion_guide.html
+ ; video_params value
++# video_params palette=15,"Brightness"=15,"Exposure, Auto"=3
  
- # Start in Setup-Mode, daemon disabled.
- setup_mode off
-@@ -50,16 +50,16 @@
+ # The full URL of the network camera stream.
+ ; netcam_url value
+@@ -50,19 +51,23 @@
  ############################################################
  
  # Image width in pixels.
--width 1280
-+width 640
+-width 640
++width 1280
  
  # Image height in pixels.
--height 720
-+height 480
+-height 480
++height 720
  
  # Maximum number of frames to be captured per second.
--framerate 2
-+framerate 15
+-framerate 15
++framerate 2
++
++# locate_motion_mode on
++
++# locate_motion_style redbox
  
  # Text to be overlayed in the lower left corner of images
--text_left CAM1
-+text_left CAMERA1
+-text_left CAMERA1
++# text_left CAM1
  
  # Text to be overlayed in the lower right corner of images.
- text_right %Y-%m-%d\n%T-%q
-@@ -72,24 +72,22 @@
+-text_right %Y-%m-%d\n%T-%q
++text_right %Y-%m-%d %T-%q
+ 
+ ############################################################
+ # Motion detection configuration parameters
+@@ -72,22 +77,26 @@
  emulate_motion off
  
  # Threshold for number of changed pixels that triggers motion.
--# threshold 1500
--# threshold 18432  # 2% of 1280 x 720
--threshold 9216  # 1% of 1280 x 720
-+threshold 1500
+-threshold 1500
++# threshold 1500
++# threshold 18432  # 2% of 1280 x 720
++threshold 9216  # 1% of 1280 x 720
++
++threshold_tune on
  
  # Noise threshold for the motion detection.
--noise_level 32
-+; noise_level 32
+-; noise_level 32
++noise_level 32
  
  # Despeckle the image using (E/e)rode or (D/d)ilate or (l)abel.
  despeckle_filter EedDl
  
  # Number of images that must contain motion to trigger an event.
--minimum_motion_frames 2
-+minimum_motion_frames 1
+-minimum_motion_frames 1
++minimum_motion_frames 2
  
  # Gap in seconds of no motion detected that triggers the end of an event.
--event_gap 600
-+event_gap 60
+-event_gap 60
++event_gap 600
  
  # The number of pre-captured (buffered) pictures from before motion.
--pre_capture 0
-+pre_capture 3
+-pre_capture 3
++pre_capture 0
  
  # Number of frames to capture after motion is no longer detected.
  post_capture 0
-@@ -107,12 +105,6 @@
+@@ -105,12 +114,18 @@
  # Command to be executed when a movie file is closed.
  ; on_movie_end value
  
--on_picture_save /etc/motion/scripts/on_picture_save.sh "pic (%Y/%m/%d %H:%M)" "changed pixels=%D, noise=%N, file=%f" %f
--# on_motion_detected /etc/motion/scripts/on_message.sh "motion (%Y/%m/%d %H:%M)"
--# on_movie_end /etc/motion/default/on_movie_end.sh "video (%Y/%m/%d %H:%M)" %f
--on_camera_lost /etc/motion/scripts/on_message.sh "error (%Y/%m/%d %H:%M)"
--
--
++on_picture_save /etc/motion/scripts/on_picture_save.sh "pic (%Y/%m/%d %H:%M)" "changed pixels=%D, noise=%N, file=%f" %f
++# on_motion_detected /etc/motion/scripts/on_message.sh "motion (%Y/%m/%d %H:%M)"
++# on_movie_end /etc/motion/default/on_movie_end.sh "video (%Y/%m/%d %H:%M)" %f
++on_camera_lost /etc/motion/scripts/on_message.sh "error (%Y/%m/%d %H:%M)"
++
++
  ############################################################
  # Picture output configuration parameters
  ############################################################
+ 
+ # Output pictures when motion is detected
+-picture_output off
++picture_output on
+ 
+ # File name(without extension) for pictures relative to target directory
+ picture_filename %Y%m%d%H%M%S-%q
+@@ -120,7 +135,7 @@
+ ############################################################
+ 
+ # Create movies of motion events.
+-movie_output on
++movie_output off
+ 
+ # Maximum length of movie in seconds.
+ movie_max_time 60
+@@ -164,6 +179,7 @@
+ ; camera /usr/etc/motion/camera2.conf
+ ; camera /usr/etc/motion/camera3.conf
+ ; camera /usr/etc/motion/camera4.conf
++camera /etc/motion/mycam.conf
+ 
+ ##############################################################
+ # Directory to read '.conf' files for cameras.
