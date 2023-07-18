@@ -1,14 +1,24 @@
---- motion.conf	2023-05-07 22:07:56.661822546 +0300
-+++ motion-2306250025.conf	2023-06-25 00:29:57.170405450 +0300
-@@ -35,6 +35,7 @@
+--- motion.conf	2023-07-18 13:24:03.206356244 +0300
++++ motion-2307181323.conf	2023-07-10 19:43:47.000000000 +0300
+@@ -13,7 +13,7 @@
+ ############################################################
+ 
+ # Start in daemon (background) mode and release terminal.
+-daemon off
++daemon off # on
+ 
+ # Start in Setup-Mode, daemon disabled.
+ setup_mode off
+@@ -35,6 +35,8 @@
  
  # Parameters to control video device.  See motion_guide.html
  ; video_params value
-+# video_params palette=15,"Brightness"=15,"Exposure, Auto"=3
++video_params palette=15,"Brightness"=15,"Exposure, Auto"=3 # YUYV
++; video_params palette=8,"Brightness"=15,"Exposure, Auto"=3 # MJPG
  
  # The full URL of the network camera stream.
  ; netcam_url value
-@@ -50,19 +51,23 @@
+@@ -50,19 +52,22 @@
  ############################################################
  
  # Image width in pixels.
@@ -21,11 +31,10 @@
  
  # Maximum number of frames to be captured per second.
 -framerate 15
-+framerate 2
++framerate 4 # 2
 +
-+# locate_motion_mode on
-+
-+# locate_motion_style redbox
++; locate_motion_mode on
++; locate_motion_style redbox
  
  # Text to be overlayed in the lower left corner of images
 -text_left CAMERA1
@@ -37,31 +46,33 @@
  
  ############################################################
  # Motion detection configuration parameters
-@@ -72,22 +77,26 @@
+@@ -72,22 +77,28 @@
  emulate_motion off
  
  # Threshold for number of changed pixels that triggers motion.
 -threshold 1500
 +# threshold 1500
 +# threshold 18432  # 2% of 1280 x 720
-+threshold 9216  # 1% of 1280 x 720
++# threshold 9216  # 1% of 1280 x 720
 +
 +threshold_tune on
  
  # Noise threshold for the motion detection.
 -; noise_level 32
-+noise_level 32
++# noise_level 32
++
++noise_tune on
  
  # Despeckle the image using (E/e)rode or (D/d)ilate or (l)abel.
- despeckle_filter EedDl
+-despeckle_filter EedDl
++despeckle_filter EededDl # EdedDl # EeddDl # EedDl
  
  # Number of images that must contain motion to trigger an event.
 -minimum_motion_frames 1
-+minimum_motion_frames 2
++minimum_motion_frames 4 # 3 # 2
  
  # Gap in seconds of no motion detected that triggers the end of an event.
--event_gap 60
-+event_gap 600
+ event_gap 60
  
  # The number of pre-captured (buffered) pictures from before motion.
 -pre_capture 3
@@ -69,7 +80,7 @@
  
  # Number of frames to capture after motion is no longer detected.
  post_capture 0
-@@ -105,12 +114,18 @@
+@@ -105,12 +116,18 @@
  # Command to be executed when a movie file is closed.
  ; on_movie_end value
  
@@ -89,7 +100,7 @@
  
  # File name(without extension) for pictures relative to target directory
  picture_filename %Y%m%d%H%M%S-%q
-@@ -120,7 +135,7 @@
+@@ -120,7 +137,7 @@
  ############################################################
  
  # Create movies of motion events.
@@ -98,7 +109,7 @@
  
  # Maximum length of movie in seconds.
  movie_max_time 60
-@@ -164,6 +179,7 @@
+@@ -164,8 +181,10 @@
  ; camera /usr/etc/motion/camera2.conf
  ; camera /usr/etc/motion/camera3.conf
  ; camera /usr/etc/motion/camera4.conf
@@ -106,3 +117,6 @@
  
  ##############################################################
  # Directory to read '.conf' files for cameras.
+ ##############################################################
+ ; camera_dir /usr/etc/motion/conf.d
++
